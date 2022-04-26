@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -36,15 +37,8 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI() {
-        val crimes = crimeListViewModel.crimes
-        adapter = CrimeAdapter(crimes)
+        adapter = CrimeAdapter(crimeListViewModel.crimes)
         crimeRecyclerView.adapter = adapter
-    }
-
-    companion object {
-        private const val TAG = "CrimeListFragment"
-
-        fun newInstance(): CrimeListFragment = CrimeListFragment()
     }
 
     private inner class CrimeHolder(view: View) :
@@ -53,6 +47,7 @@ class CrimeListFragment : Fragment() {
         private lateinit var crime: Crime
         val titleTextView = itemView.findViewById<View>(R.id.crime_title) as TextView
         val dateTextView = itemView.findViewById<View>(R.id.crime_date) as TextView
+        val solvedImageView = itemView.findViewById<View>(R.id.crime_solved) as ImageView
 
         init {
             itemView.setOnClickListener(this)
@@ -62,6 +57,11 @@ class CrimeListFragment : Fragment() {
             this.crime = crime
             titleTextView.text = crime.title
             dateTextView.text = crime.date.toString()
+            solvedImageView.visibility = if (crime.isSolved) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
         override fun onClick(view: View?) {
@@ -82,5 +82,11 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = crimes.size
+    }
+
+    companion object {
+        private const val TAG = "CrimeListFragment"
+
+        fun newInstance(): CrimeListFragment = CrimeListFragment()
     }
 }
