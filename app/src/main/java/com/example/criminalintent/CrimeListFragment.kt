@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,11 +58,7 @@ class CrimeListFragment : Fragment() {
             this.crime = crime
             titleTextView.text = crime.title
             dateTextView.text = crime.date.toString()
-            solvedImageView.visibility = if (crime.isSolved) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+            solvedImageView.isVisible = crime.isSolved
         }
 
         override fun onClick(view: View?) {
