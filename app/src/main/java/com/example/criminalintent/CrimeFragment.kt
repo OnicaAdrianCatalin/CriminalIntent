@@ -31,7 +31,6 @@ class CrimeFragment : Fragment() {
         bindViews(view)
         dateButton.apply {
             text = crime.date.toString()
-            isEnabled = false
         }
         return view
     }
@@ -58,7 +57,7 @@ class CrimeFragment : Fragment() {
                 count: Int,
                 after: Int
             ) {
-                // TODO("Not yet implemented")
+                // Not implemented
             }
 
             override fun onTextChanged(
@@ -71,7 +70,7 @@ class CrimeFragment : Fragment() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                // TODO("Not yet implemented")
+                // Not implemented
             }
         }
         titleField.addTextChangedListener(titleWatcher)
