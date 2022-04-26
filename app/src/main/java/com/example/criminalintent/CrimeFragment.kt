@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import java.text.DateFormat
 
 class CrimeFragment : Fragment() {
     private lateinit var crime: Crime
@@ -28,6 +29,7 @@ class CrimeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime, container, false)
+        val dateFormat: DateFormat = DateFormat.getDateInstance()
         bindViews(view)
         dateButton.apply {
             text = crime.date.toString()
