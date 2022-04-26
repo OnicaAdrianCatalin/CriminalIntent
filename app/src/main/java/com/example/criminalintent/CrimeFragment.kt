@@ -29,7 +29,6 @@ class CrimeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime, container, false)
-        val dateFormat: DateFormat = DateFormat.getDateInstance()
         bindViews(view)
         dateButton.apply {
             text = crime.date.toString()
