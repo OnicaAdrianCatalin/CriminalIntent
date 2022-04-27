@@ -18,12 +18,8 @@ class CrimeListFragment : Fragment() {
     private val crimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
-    private var adapter: CrimeAdapter? = null
+    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "Total crimes: ${crimeListViewModel.crimes.size}")
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,12 +29,25 @@ class CrimeListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
         crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
-        updateUI()
         return view
     }
 
-    private fun updateUI() {
-        adapter = CrimeAdapter(crimeListViewModel.crimes)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeData()
+    }
+
+    private fun observeData() {
+        crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
+            crimes?.let {
+                Log.i(TAG, "Got crimes ${crimes.size}")
+                updateUI(crimes)
+            }
+        }
+    }
+
+    private fun updateUI(crimes: List<Crime>) {
+        adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
     }
 
