@@ -6,11 +6,11 @@ import com.example.criminalintent.database.CrimeDatabase
 
 class CriminalIntentApplication : Application() {
 
-    private val database =
-        Room.databaseBuilder(this, CrimeDatabase::class.java, CrimeRepository.DATABASE_NAME).build()
-
     override fun onCreate() {
-        CrimeRepository.initialize(database.crimeDao())
         super.onCreate()
+        val database =
+            Room.databaseBuilder(this, CrimeDatabase::class.java, CrimeRepository.DATABASE_NAME)
+                .build()
+        CrimeRepository.initialize(database.crimeDao())
     }
 }

@@ -39,8 +39,8 @@ class CrimeListFragment : Fragment() {
 
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-                Log.i(TAG, "Got crimes ${crimes.size}")
-                updateUI(crimes)
+            Log.i(TAG, "Got crimes ${crimes.size}")
+            updateUI(crimes)
         }
     }
 
