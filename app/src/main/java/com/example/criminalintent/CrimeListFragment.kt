@@ -20,6 +20,7 @@ class CrimeListFragment : Fragment() {
     }
     private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
+    private lateinit var warningTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +28,7 @@ class CrimeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        bindViews(view)
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
@@ -39,6 +40,9 @@ class CrimeListFragment : Fragment() {
 
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
+            if (crimes.isEmpty()) {
+                warningTextView.isVisible = true
+            }
             Log.i(TAG, "Got crimes ${crimes.size}")
             updateUI(crimes)
         }
@@ -47,6 +51,11 @@ class CrimeListFragment : Fragment() {
     private fun updateUI(crimes: List<Crime>) {
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
+    }
+
+    private fun bindViews(view: View) {
+        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        warningTextView = view.findViewById(R.id.warning_text_view)
     }
 
     private inner class CrimeHolder(view: View) :

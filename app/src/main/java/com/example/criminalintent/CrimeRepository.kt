@@ -2,13 +2,12 @@ package com.example.criminalintent
 
 import androidx.lifecycle.LiveData
 import com.example.criminalintent.database.CrimeDao
-import java.util.*
 
 class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
 
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
 
-    fun getCrime(id: UUID): LiveData<Crime?> = crimeDao.getCrime(id)
+    fun getCrime(id: Int): LiveData<Crime?> = crimeDao.getCrime(id)
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
