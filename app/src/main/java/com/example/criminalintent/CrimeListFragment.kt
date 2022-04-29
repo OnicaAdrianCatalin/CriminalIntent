@@ -18,7 +18,7 @@ class CrimeListFragment : Fragment() {
     private val crimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
-    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
+    private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
 
     override fun onCreateView(
@@ -39,10 +39,8 @@ class CrimeListFragment : Fragment() {
 
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-            crimes?.let {
                 Log.i(TAG, "Got crimes ${crimes.size}")
                 updateUI(crimes)
-            }
         }
     }
 
