@@ -1,5 +1,6 @@
-package com.example.criminalintent
+package com.example.criminalintent.presentation.crime_list_fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,19 +8,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.criminalintent.R
+import com.example.criminalintent.model.Crime
+import java.util.*
 
 class CrimeListFragment : Fragment() {
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: UUID)
+    }
+
     private val crimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
+    private var callbacks: Callbacks? = null
     private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +48,11 @@ class CrimeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeData()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     private fun observeData() {
@@ -71,7 +89,7 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(view: View?) {
-            Toast.makeText(context, "${crime.title} pressed", Toast.LENGTH_SHORT).show()
+            callbacks?.onCrimeSelected(crime.id)
         }
     }
 
@@ -89,6 +107,7 @@ class CrimeListFragment : Fragment() {
 
         override fun getItemCount(): Int = crimes.size
     }
+
     companion object {
         private const val TAG = "CrimeListFragment"
 

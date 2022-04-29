@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.criminalintent.database.CrimeDatabase
+import com.example.criminalintent.model.Crime
 import java.util.UUID
 
 class CrimeRepository private constructor(context: Context) {

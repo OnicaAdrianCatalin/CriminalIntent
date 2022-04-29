@@ -1,4 +1,4 @@
-package com.example.criminalintent
+package com.example.criminalintent.presentation.crime_fragment
 
 import android.os.Bundle
 import android.text.Editable
@@ -10,16 +10,27 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.criminalintent.R
+import com.example.criminalintent.model.Crime
+import java.util.UUID
 
 class CrimeFragment : Fragment() {
+
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
 
+    private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
+        ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
+        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
+        crimeDetailViewModel.loadCrime(crimeId)
     }
 
     override fun onCreateView(
@@ -35,12 +46,30 @@ class CrimeFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeDetailViewModel.crimeLiveData.observe(
+            viewLifecycleOwner
+        ) { crime ->
+            crime?.let {
+                this.crime = crime
+                updateUI()
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
         solvedCheckBox.apply {
             crime.isSolved = isChecked
         }
+    }
+
+    private fun updateUI(){
+        titleField.setText(crime.title)
+        dateButton.text = crime.date.toString()
+        solvedCheckBox.isChecked = crime.isSolved
     }
 
     private fun bindViews(view: View) {
@@ -74,5 +103,19 @@ class CrimeFragment : Fragment() {
             }
         }
         titleField.addTextChangedListener(titleWatcher)
+    }
+
+    companion object {
+        private const val ARG_CRIME_ID = "crime_id"
+        private const val CRIME_FRAGMENT_TAG = "CrimeFragment"
+
+        fun newInstance(crimeId: UUID): CrimeFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_CRIME_ID, crimeId)
+            }
+            return CrimeFragment().apply {
+                arguments = args
+            }
+        }
     }
 }
