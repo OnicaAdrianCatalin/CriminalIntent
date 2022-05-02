@@ -14,20 +14,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
-import com.example.criminalintent.model.Crime
-import java.util.*
+import com.example.criminalintent.data.model.Crime
 
 class CrimeListFragment : Fragment() {
     interface Callbacks {
-        fun onCrimeSelected(crimeId: UUID)
+        fun onCrimeSelected(crimeId: Int)
     }
 
     private val crimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
     private var callbacks: Callbacks? = null
-    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
+    private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
+    private lateinit var warningTextView: TextView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,7 +40,7 @@ class CrimeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        bindViews(view)
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
@@ -57,16 +57,23 @@ class CrimeListFragment : Fragment() {
 
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-            crimes?.let {
-                Log.i(TAG, "Got crimes ${crimes.size}")
-                updateUI(crimes)
+            if (crimes.isEmpty()) {
+                warningTextView.isVisible = true
             }
+            Log.i(TAG, "Got crimes ${crimes.size}")
+            updateUI(crimes)
+
         }
     }
 
     private fun updateUI(crimes: List<Crime>) {
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
+    }
+
+    private fun bindViews(view: View) {
+        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        warningTextView = view.findViewById(R.id.warning_text_view)
     }
 
     private inner class CrimeHolder(view: View) :
