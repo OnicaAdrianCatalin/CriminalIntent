@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_fragment
+package com.example.criminalintent.presentation.crime_detail
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,8 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
-import com.example.criminalintent.model.Crime
-import java.util.UUID
+import com.example.criminalintent.data.model.Crime
 
 class CrimeFragment : Fragment() {
 
@@ -29,7 +28,7 @@ class CrimeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
-        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
+        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
@@ -48,6 +47,11 @@ class CrimeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeData()
+
+    }
+
+    private fun observeData() {
         crimeDetailViewModel.crimeLiveData.observe(
             viewLifecycleOwner
         ) { crime ->
@@ -61,12 +65,17 @@ class CrimeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
-        solvedCheckBox.apply {
-            crime.isSolved = isChecked
+        solvedCheckBox.setOnClickListener {
+            crime.isSolved = solvedCheckBox.isChecked
         }
     }
 
-    private fun updateUI(){
+    override fun onStop() {
+        super.onStop()
+        crimeDetailViewModel.updateCrime(crime)
+    }
+
+    private fun updateUI() {
         titleField.setText(crime.title)
         dateButton.text = crime.date.toString()
         solvedCheckBox.isChecked = crime.isSolved
@@ -107,9 +116,8 @@ class CrimeFragment : Fragment() {
 
     companion object {
         private const val ARG_CRIME_ID = "crime_id"
-        private const val CRIME_FRAGMENT_TAG = "CrimeFragment"
 
-        fun newInstance(crimeId: UUID): CrimeFragment {
+        fun newInstance(crimeId: Int): CrimeFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_CRIME_ID, crimeId)
             }

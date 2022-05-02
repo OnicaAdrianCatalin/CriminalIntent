@@ -3,11 +3,11 @@ package com.example.criminalintent.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.criminalintent.R
-import com.example.criminalintent.presentation.crime_fragment.CrimeFragment
-import com.example.criminalintent.presentation.crime_list_fragment.CrimeListFragment
-import java.util.*
+import com.example.criminalintent.presentation.crime_detail.CrimeFragment
+import com.example.criminalintent.presentation.crime_list.CrimeListFragment
 
-class MainActivity : AppCompatActivity(),
+class MainActivity :
+    AppCompatActivity(),
     CrimeListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,16 +24,12 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onCrimeSelected(crimeId: UUID) {
+    override fun onCrimeSelected(crimeId: Int) {
         val fragment = CrimeFragment.newInstance(crimeId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    companion object {
-        private const val MAIN_ACTIVITY_TAG = "MainActivity"
     }
 }

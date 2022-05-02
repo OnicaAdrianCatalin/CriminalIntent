@@ -1,5 +1,6 @@
-package com.example.criminalintent
+package com.example.criminalintent.presentation.crime_list
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,19 +8,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.criminalintent.R
+import com.example.criminalintent.data.model.Crime
 
 class CrimeListFragment : Fragment() {
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: Int)
+    }
+
     private val crimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
-    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
+    private var callbacks: Callbacks? = null
+    private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
+    private lateinit var warningTextView: TextView
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +40,7 @@ class CrimeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        bindViews(view)
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         return view
     }
@@ -37,18 +50,29 @@ class CrimeListFragment : Fragment() {
         observeData()
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-            crimes?.let {
-                Log.i(TAG, "Got crimes ${crimes.size}")
-                updateUI(crimes)
+            if (crimes.isEmpty()) {
+                warningTextView.isVisible = true
             }
+            Log.i(TAG, "Got crimes ${crimes.size}")
+            updateUI(crimes)
         }
     }
 
     private fun updateUI(crimes: List<Crime>) {
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
+    }
+
+    private fun bindViews(view: View) {
+        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
+        warningTextView = view.findViewById(R.id.warning_text_view)
     }
 
     private inner class CrimeHolder(view: View) :
@@ -71,7 +95,7 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(view: View?) {
-            Toast.makeText(context, "${crime.title} pressed", Toast.LENGTH_SHORT).show()
+            callbacks?.onCrimeSelected(crime.id)
         }
     }
 
@@ -89,6 +113,7 @@ class CrimeListFragment : Fragment() {
 
         override fun getItemCount(): Int = crimes.size
     }
+
     companion object {
         private const val TAG = "CrimeListFragment"
 
