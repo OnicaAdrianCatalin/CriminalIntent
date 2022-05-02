@@ -1,4 +1,4 @@
-package com.example.criminalintent.data.database
+package com.example.criminalintent.data.local
 
 import androidx.room.TypeConverter
 import java.util.Date

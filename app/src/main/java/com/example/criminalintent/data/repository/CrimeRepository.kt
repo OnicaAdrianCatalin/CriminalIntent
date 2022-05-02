@@ -1,7 +1,7 @@
 package com.example.criminalintent.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.criminalintent.data.database.CrimeDao
+import com.example.criminalintent.data.local.CrimeDao
 import com.example.criminalintent.data.model.Crime
 import java.util.concurrent.Executors
 

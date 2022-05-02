@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_fragment
+package com.example.criminalintent.presentation.crime_detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

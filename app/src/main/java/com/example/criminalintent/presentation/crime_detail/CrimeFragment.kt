@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_fragment
+package com.example.criminalintent.presentation.crime_detail
 
 import android.os.Bundle
 import android.text.Editable

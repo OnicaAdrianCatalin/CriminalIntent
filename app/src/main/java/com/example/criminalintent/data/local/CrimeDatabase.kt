@@ -1,4 +1,4 @@
-package com.example.criminalintent.data.database
+package com.example.criminalintent.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

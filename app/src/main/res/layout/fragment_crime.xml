@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    tools:context=".presentation.crime_fragment.CrimeFragment">
+    tools:context=".presentation.crime_detail.CrimeFragment">
 
     <TextView
         style="?android:listSeparatorTextViewStyle"

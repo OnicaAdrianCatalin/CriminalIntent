@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_list_fragment
+package com.example.criminalintent.presentation.crime_list
 
 import android.content.Context
 import android.os.Bundle
@@ -62,7 +62,6 @@ class CrimeListFragment : Fragment() {
             }
             Log.i(TAG, "Got crimes ${crimes.size}")
             updateUI(crimes)
-
         }
     }
 

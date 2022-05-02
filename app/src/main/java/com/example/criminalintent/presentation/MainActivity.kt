@@ -3,10 +3,11 @@ package com.example.criminalintent.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.criminalintent.R
-import com.example.criminalintent.presentation.crime_fragment.CrimeFragment
-import com.example.criminalintent.presentation.crime_list_fragment.CrimeListFragment
+import com.example.criminalintent.presentation.crime_detail.CrimeFragment
+import com.example.criminalintent.presentation.crime_list.CrimeListFragment
 
-class MainActivity : AppCompatActivity(),
+class MainActivity :
+    AppCompatActivity(),
     CrimeListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
