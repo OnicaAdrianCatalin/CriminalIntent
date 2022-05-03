@@ -22,17 +22,17 @@ class CriminalIntentApplication : Application() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     "CREATE TABLE new_table ( id INTEGER NOT NULL," +
-                            "title TEXT NOT NULL," +
-                            "date INTEGER NOT NULL, " +
-                            "isSolved INTEGER NOT NULL," +
-                            "PRIMARY KEY(id))"
+                        "title TEXT NOT NULL," +
+                        "date INTEGER NOT NULL, " +
+                        "isSolved INTEGER NOT NULL," +
+                        "PRIMARY KEY(id))"
                 )
                 database.execSQL(
                     "INSERT INTO new_table(" +
-                            "title," +
-                            "date," +
-                            "isSolved)" +
-                            " SELECT title, date, isSolved FROM Crime"
+                        "title," +
+                        "date," +
+                        "isSolved)" +
+                        " SELECT title, date, isSolved FROM Crime"
                 )
                 database.execSQL("DROP TABLE Crime")
                 database.execSQL("ALTER TABLE new_table RENAME TO Crime")

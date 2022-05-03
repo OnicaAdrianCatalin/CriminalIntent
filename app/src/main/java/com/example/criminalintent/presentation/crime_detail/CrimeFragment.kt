@@ -13,8 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
+import com.example.criminalintent.presentation.dialogs.DatePickerFragment
+import java.util.Date
 
-class CrimeFragment : Fragment() {
+class CrimeFragment :
+    Fragment(),
+    DatePickerFragment.Callbacks {
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
@@ -39,9 +43,6 @@ class CrimeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime, container, false)
         bindViews(view)
-        dateButton.apply {
-            text = crime.date.toString()
-        }
         return view
     }
 
@@ -67,6 +68,12 @@ class CrimeFragment : Fragment() {
         solvedCheckBox.apply {
             crime.isSolved = isChecked
             jumpDrawablesToCurrentState()
+        }
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInstance(crime.date).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_CODE)
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
+            }
         }
     }
 
@@ -116,6 +123,8 @@ class CrimeFragment : Fragment() {
 
     companion object {
         private const val ARG_CRIME_ID = "crime_id"
+        private const val DIALOG_DATE = "DialogDate"
+        private const val REQUEST_CODE = 0
 
         fun newInstance(crimeId: Int): CrimeFragment {
             val args = Bundle().apply {
@@ -125,5 +134,10 @@ class CrimeFragment : Fragment() {
                 arguments = args
             }
         }
+    }
+
+    override fun onDateSelected(date: Date) {
+        crime.date = date
+        updateUI()
     }
 }
