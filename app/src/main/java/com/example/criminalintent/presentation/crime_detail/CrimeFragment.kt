@@ -48,6 +48,7 @@ class CrimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeData()
+
     }
 
     private fun observeData() {
@@ -64,9 +65,8 @@ class CrimeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
-        solvedCheckBox.apply {
-            crime.isSolved = isChecked
-            jumpDrawablesToCurrentState()
+        solvedCheckBox.setOnClickListener {
+            crime.isSolved = solvedCheckBox.isChecked
         }
     }
 
