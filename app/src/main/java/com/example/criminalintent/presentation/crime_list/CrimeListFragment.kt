@@ -15,10 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
+import java.util.*
 
 class CrimeListFragment : Fragment() {
     interface Callbacks {
-        fun onCrimeSelected(crimeId: Int)
+        fun onCrimeSelected(crimeId: UUID)
     }
 
     private val crimeListViewModel by lazy {

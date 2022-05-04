@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
-import java.util.Date
+import java.util.*
 
 class CrimeFragment :
     Fragment(),
@@ -32,7 +32,7 @@ class CrimeFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
-        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
+        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
@@ -126,7 +126,7 @@ class CrimeFragment :
         private const val DIALOG_DATE = "DialogDate"
         private const val REQUEST_CODE = 0
 
-        fun newInstance(crimeId: Int): CrimeFragment {
+        fun newInstance(crimeId: UUID): CrimeFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_CRIME_ID, crimeId)
             }

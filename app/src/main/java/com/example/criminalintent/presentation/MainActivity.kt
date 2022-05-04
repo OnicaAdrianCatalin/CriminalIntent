@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.criminalintent.R
 import com.example.criminalintent.presentation.crime_detail.CrimeFragment
 import com.example.criminalintent.presentation.crime_list.CrimeListFragment
+import java.util.*
 
 class MainActivity :
     AppCompatActivity(),
@@ -24,7 +25,7 @@ class MainActivity :
         }
     }
 
-    override fun onCrimeSelected(crimeId: Int) {
+    override fun onCrimeSelected(crimeId: UUID) {
         val fragment = CrimeFragment.newInstance(crimeId)
         supportFragmentManager
             .beginTransaction()
