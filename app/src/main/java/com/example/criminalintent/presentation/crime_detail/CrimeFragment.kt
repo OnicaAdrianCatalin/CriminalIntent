@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
-import java.util.*
+import java.util.UUID
 
 class CrimeFragment :
     Fragment(),
