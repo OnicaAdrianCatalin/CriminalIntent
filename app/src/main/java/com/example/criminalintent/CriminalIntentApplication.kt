@@ -14,5 +14,4 @@ class CriminalIntentApplication : Application() {
                 .build()
         CrimeRepository.initialize(database.crimeDao())
     }
-
 }

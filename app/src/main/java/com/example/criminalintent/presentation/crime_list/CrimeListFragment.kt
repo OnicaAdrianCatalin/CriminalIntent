@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
-import java.util.*
+import java.util.UUID
 
 class CrimeListFragment : Fragment() {
     interface Callbacks {

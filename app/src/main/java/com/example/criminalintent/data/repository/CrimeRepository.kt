@@ -3,7 +3,7 @@ package com.example.criminalintent.data.repository
 import androidx.lifecycle.LiveData
 import com.example.criminalintent.data.local.CrimeDao
 import com.example.criminalintent.data.model.Crime
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.Executors
 
 class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
