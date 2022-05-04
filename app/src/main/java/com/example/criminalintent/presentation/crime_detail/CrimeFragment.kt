@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
@@ -18,7 +19,7 @@ import java.util.*
 
 class CrimeFragment :
     Fragment(),
-    DatePickerFragment.Callbacks {
+    FragmentResultListener {
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
@@ -48,8 +49,8 @@ class CrimeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        childFragmentManager.setFragmentResultListener(DIALOG_DATE , viewLifecycleOwner, this)
         observeData()
-
     }
 
     private fun observeData() {
@@ -63,6 +64,13 @@ class CrimeFragment :
         }
     }
 
+    override fun onFragmentResult(requestCode: String, result: Bundle) {
+        when (requestCode) {
+            DIALOG_DATE -> {
+                crime.date = DatePickerFragment.getSelectedDate(result)
+            }
+        }
+    }
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
@@ -70,9 +78,8 @@ class CrimeFragment :
             crime.isSolved = solvedCheckBox.isChecked
         }
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date).apply {
-                setTargetFragment(this@CrimeFragment, REQUEST_CODE)
-                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
+            DatePickerFragment.newInstance(crime.date, DIALOG_DATE).apply {
+                show(this@CrimeFragment.childFragmentManager, DIALOG_DATE)
             }
         }
     }
@@ -124,7 +131,6 @@ class CrimeFragment :
     companion object {
         private const val ARG_CRIME_ID = "crime_id"
         private const val DIALOG_DATE = "DialogDate"
-        private const val REQUEST_CODE = 0
 
         fun newInstance(crimeId: UUID): CrimeFragment {
             val args = Bundle().apply {
@@ -134,10 +140,5 @@ class CrimeFragment :
                 arguments = args
             }
         }
-    }
-
-    override fun onDateSelected(date: Date) {
-        crime.date = date
-        updateUI()
     }
 }
