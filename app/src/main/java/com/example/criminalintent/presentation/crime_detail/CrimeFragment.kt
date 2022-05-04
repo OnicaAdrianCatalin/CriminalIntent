@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
+import java.util.UUID
 
 class CrimeFragment : Fragment() {
 
@@ -28,7 +29,7 @@ class CrimeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
-        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
+        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
@@ -117,7 +118,7 @@ class CrimeFragment : Fragment() {
     companion object {
         private const val ARG_CRIME_ID = "crime_id"
 
-        fun newInstance(crimeId: Int): CrimeFragment {
+        fun newInstance(crimeId: UUID): CrimeFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_CRIME_ID, crimeId)
             }
