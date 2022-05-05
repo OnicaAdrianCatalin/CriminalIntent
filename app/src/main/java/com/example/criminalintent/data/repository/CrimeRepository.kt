@@ -3,7 +3,6 @@ package com.example.criminalintent.data.repository
 import androidx.lifecycle.LiveData
 import com.example.criminalintent.data.local.CrimeDao
 import com.example.criminalintent.data.model.Crime
-import java.util.UUID
 import java.util.concurrent.Executors
 
 class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
@@ -12,7 +11,7 @@ class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
 
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
 
-    fun getCrime(id: UUID): LiveData<Crime?> = crimeDao.getCrime(id)
+    fun getCrime(id: Int): LiveData<Crime?> = crimeDao.getCrime(id)
 
     fun updateCrime(crime: Crime) {
         executor.execute {

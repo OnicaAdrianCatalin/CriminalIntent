@@ -3,9 +3,7 @@ package com.example.criminalintent.presentation.crime_detail
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -15,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
-import java.util.UUID
 
 class CrimeFragment : Fragment(), FragmentResultListener {
 
@@ -31,7 +28,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
-        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
+        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
@@ -47,7 +44,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragmentManager.setFragmentResultListener(DIALOG_DATE , viewLifecycleOwner, this)
+        childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
     }
 
@@ -69,6 +66,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
@@ -130,7 +128,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         private const val ARG_CRIME_ID = "crime_id"
         private const val DIALOG_DATE = "DialogDate"
 
-        fun newInstance(crimeId: UUID): CrimeFragment {
+        fun newInstance(crimeId: Int): CrimeFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_CRIME_ID, crimeId)
             }

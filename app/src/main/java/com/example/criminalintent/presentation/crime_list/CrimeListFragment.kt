@@ -3,9 +3,7 @@ package com.example.criminalintent.presentation.crime_list
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -15,11 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
-import java.util.UUID
 
 class CrimeListFragment : Fragment() {
     interface Callbacks {
-        fun onCrimeSelected(crimeId: UUID)
+        fun onCrimeSelected(crimeId: Int)
     }
 
     private val crimeListViewModel by lazy {
@@ -33,6 +30,11 @@ class CrimeListFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -51,6 +53,23 @@ class CrimeListFragment : Fragment() {
         observeData()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_crime -> {
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onDetach() {
         super.onDetach()
         callbacks = null
@@ -58,9 +77,7 @@ class CrimeListFragment : Fragment() {
 
     private fun observeData() {
         crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
-            if (crimes.isEmpty()) {
-                warningTextView.isVisible = true
-            }
+            warningTextView.isVisible = crimes.isEmpty()
             Log.i(TAG, "Got crimes ${crimes.size}")
             updateUI(crimes)
         }
