@@ -17,9 +17,7 @@ import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
 import java.util.UUID
 
-class CrimeFragment :
-    Fragment(),
-    FragmentResultListener {
+class CrimeFragment : Fragment(), FragmentResultListener {
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
