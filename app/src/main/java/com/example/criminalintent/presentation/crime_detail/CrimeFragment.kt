@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +48,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragmentManager.setFragmentResultListener(DIALOG_DATE , viewLifecycleOwner, this)
+        childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
     }
 
@@ -69,6 +70,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         onTextChangeListener()
@@ -131,9 +133,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         private const val DIALOG_DATE = "DialogDate"
 
         fun newInstance(crimeId: UUID): CrimeFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_CRIME_ID, crimeId)
-            }
+            val args = bundleOf(ARG_CRIME_ID to crimeId)
             return CrimeFragment().apply {
                 arguments = args
             }
