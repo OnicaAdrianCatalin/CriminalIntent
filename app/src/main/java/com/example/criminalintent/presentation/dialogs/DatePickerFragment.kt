@@ -10,19 +10,15 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
+
 class DatePickerFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val calendar = Calendar.getInstance()
         val date = getInitialDateCalendar()
-        if (date != null) {
-            calendar.time = date
-        }
-        val initialYear = calendar.get(Calendar.YEAR)
-        val initialMonth = calendar.get(Calendar.MONTH)
-        val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val args = arguments?.getSerializable(ARG_DATE) as Date
+        date.time = args
         return DatePickerDialog(
-            requireContext(), getDateListener(), initialYear, initialMonth, initialDay
+            requireContext(), getDateListener(), date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH)
         )
     }
 
@@ -37,8 +33,13 @@ class DatePickerFragment : DialogFragment() {
         }
     }
 
-    private fun getInitialDateCalendar(): Date? {
-        return arguments?.getSerializable(ARG_DATE) as Date?
+    private fun getInitialDateCalendar(): Calendar {
+        val calendar = Calendar.getInstance()
+        return calendar.apply {
+            this.get(Calendar.YEAR)
+            this.get(Calendar.MONTH)
+            this.get(Calendar.DAY_OF_MONTH)
+        }
     }
 
     companion object {
