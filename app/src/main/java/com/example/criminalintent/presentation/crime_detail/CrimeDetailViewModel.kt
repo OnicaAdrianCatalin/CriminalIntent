@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.data.repository.CrimeRepository
-import java.util.*
+import java.util.UUID
 
 class CrimeDetailViewModel : ViewModel() {
 
