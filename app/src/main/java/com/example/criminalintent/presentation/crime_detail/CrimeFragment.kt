@@ -3,10 +3,16 @@ package com.example.criminalintent.presentation.crime_detail
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
@@ -14,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CrimeFragment : Fragment(), FragmentResultListener {
 
@@ -28,7 +35,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crime = Crime()
+        setHasOptionsMenu(true)
         val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
         crimeDetailViewModel.loadCrime(crimeId)
     }
@@ -47,6 +54,43 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onViewCreated(view, savedInstanceState)
         childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
+        crime = Crime()
+        onBackPressed()
+    }
+
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showAlertDialog()
+                }
+            }
+        )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.crime_detail_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_crime -> {
+                addOrUpdateCrime()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun addOrUpdateCrime() {
+        if (crimeDetailViewModel.crimeLiveData.value == null) {
+            crimeDetailViewModel.addCrime(crime)
+            activity?.supportFragmentManager?.popBackStack()
+        } else {
+            crimeDetailViewModel.updateCrime(crime)
+            activity?.supportFragmentManager?.popBackStack()
+        }
     }
 
     private fun observeData() {
@@ -81,9 +125,19 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        crimeDetailViewModel.updateCrime(crime)
+    private fun showAlertDialog() {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle("Alert!")
+                .setMessage("If you exit, the changes will not be saved")
+                .setNegativeButton(
+                    "Discard changes"
+                ) { _, _ -> activity?.supportFragmentManager?.popBackStack() }
+                .setPositiveButton(
+                    "Continue editing"
+                ) { dialogInterface, _ -> dialogInterface.dismiss() }
+                .show()
+        }
     }
 
     private fun updateUI() {
@@ -129,7 +183,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         private const val ARG_CRIME_ID = "crime_id"
         private const val DIALOG_DATE = "DialogDate"
 
-        fun newInstance(crimeId: UUID): CrimeFragment {
+        fun newInstance(crimeId: Int): CrimeFragment {
             val args = bundleOf(ARG_CRIME_ID to crimeId)
             return CrimeFragment().apply {
                 arguments = args

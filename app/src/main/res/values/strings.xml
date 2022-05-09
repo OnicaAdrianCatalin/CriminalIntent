@@ -7,4 +7,5 @@
     <string name="solved">Solved</string>
     <string name="new_crime">New Crime</string>
     <string name="warning">The list of crimes is empty</string>
+    <string name="save">Save</string>
 </resources>

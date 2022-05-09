@@ -17,6 +17,10 @@ class CrimeDetailViewModel : ViewModel() {
             crimeRepository.getCrime(crimeId)
         }
 
+    fun addCrime(crime: Crime) {
+        crimeRepository.addCrime(crime)
+    }
+
     fun loadCrime(crimeId: Int) {
         crimeIdLiveData.value = crimeId
     }
