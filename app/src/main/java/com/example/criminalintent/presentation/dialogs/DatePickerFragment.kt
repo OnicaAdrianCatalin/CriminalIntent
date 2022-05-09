@@ -7,8 +7,8 @@ import android.widget.DatePicker
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.Date
+import java.util.GregorianCalendar
 
 
 class DatePickerFragment : DialogFragment() {
@@ -18,7 +18,11 @@ class DatePickerFragment : DialogFragment() {
         val args = arguments?.getSerializable(ARG_DATE) as Date
         date.time = args
         return DatePickerDialog(
-            requireContext(), getDateListener(), date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH)
+            requireContext(),
+            getDateListener(),
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH)
         )
     }
 
