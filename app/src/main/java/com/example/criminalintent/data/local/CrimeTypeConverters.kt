@@ -1,7 +1,7 @@
 package com.example.criminalintent.data.local
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 class CrimeTypeConverters {
 

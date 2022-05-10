@@ -11,6 +11,7 @@ class CrimeDetailViewModel : ViewModel() {
 
     private val crimeRepository = CrimeRepository.get()
     private val crimeIdLiveData = MutableLiveData<Int>()
+    var crime = Crime()
 
     var crimeLiveData: LiveData<Crime?> =
         Transformations.switchMap(crimeIdLiveData) { crimeId ->
@@ -27,5 +28,9 @@ class CrimeDetailViewModel : ViewModel() {
 
     fun updateCrime(crime: Crime) {
         crimeRepository.updateCrime(crime)
+    }
+
+    fun upsert(crime: Crime) {
+        crimeRepository.upsert(crime)
     }
 }

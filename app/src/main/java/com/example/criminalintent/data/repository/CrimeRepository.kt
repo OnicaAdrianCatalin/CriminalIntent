@@ -25,6 +25,12 @@ class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
         }
     }
 
+    fun upsert(crime: Crime) {
+        executor.execute {
+            crimeDao.upsertCrime(crime)
+        }
+    }
+
     companion object {
         private var INSTANCE: CrimeRepository? = null
         const val DATABASE_NAME = "crime-database"

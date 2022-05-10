@@ -10,7 +10,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
-
 class DatePickerFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -1,5 +1,7 @@
 package com.example.criminalintent.data.local
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -21,4 +23,13 @@ interface CrimeDao {
 
     @Insert
     fun addCrime(crime: Crime)
+
+    fun upsertCrime(crime: Crime) {
+        try {
+            addCrime(crime)
+        } catch (exception: SQLiteConstraintException) {
+            Log.e("exception", "upsert: ${exception.message}")
+            updateCrime(crime)
+        }
+    }
 }

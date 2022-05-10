@@ -18,13 +18,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.criminalintent.R
-import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CrimeFragment : Fragment(), FragmentResultListener {
 
-    private lateinit var crime: Crime
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
@@ -35,9 +33,8 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadCrimeFromArguments()
         setHasOptionsMenu(true)
-        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
-        crimeDetailViewModel.loadCrime(crimeId)
     }
 
     override fun onCreateView(
@@ -54,11 +51,15 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onViewCreated(view, savedInstanceState)
         childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
-        crime = Crime()
-        onBackPressed()
+        setOnBackPressed()
     }
 
-    private fun onBackPressed() {
+    private fun loadCrimeFromArguments() {
+        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
+        crimeDetailViewModel.loadCrime(crimeId)
+    }
+
+    private fun setOnBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -71,7 +72,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.crime_detail_menu, menu)
+        inflater.inflate(R.menu.view_crimedetail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,13 +86,8 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addOrUpdateCrime() {
-        if (crimeDetailViewModel.crimeLiveData.value == null) {
-            crimeDetailViewModel.addCrime(crime)
-            activity?.supportFragmentManager?.popBackStack()
-        } else {
-            crimeDetailViewModel.updateCrime(crime)
-            activity?.supportFragmentManager?.popBackStack()
-        }
+        crimeDetailViewModel.upsert(crimeDetailViewModel.crime)
+        activity?.supportFragmentManager?.popBackStack()
     }
 
     private fun observeData() {
@@ -99,7 +95,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             viewLifecycleOwner
         ) { crime ->
             crime?.let {
-                this.crime = crime
+                crimeDetailViewModel.crime = crime
                 updateUI()
             }
         }
@@ -108,7 +104,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     override fun onFragmentResult(requestCode: String, result: Bundle) {
         when (requestCode) {
             DIALOG_DATE -> {
-                crime.date = DatePickerFragment.getSelectedDate(result)
+                crimeDetailViewModel.crime.date = DatePickerFragment.getSelectedDate(result)
             }
         }
     }
@@ -117,15 +113,15 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onStart()
         onTextChangeListener()
         setOnClickListeners()
-        dateButton.text = crime.date.toString()
+        dateButton.text = crimeDetailViewModel.crime.date.toString()
     }
 
     private fun setOnClickListeners() {
         solvedCheckBox.setOnClickListener {
-            crime.isSolved = solvedCheckBox.isChecked
+            crimeDetailViewModel.crime.isSolved = solvedCheckBox.isChecked
         }
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date, DIALOG_DATE).apply {
+            DatePickerFragment.newInstance(crimeDetailViewModel.crime.date, DIALOG_DATE).apply {
                 show(this@CrimeFragment.childFragmentManager, DIALOG_DATE)
             }
         }
@@ -147,9 +143,9 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun updateUI() {
-        titleField.setText(crime.title)
-        dateButton.text = crime.date.toString()
-        solvedCheckBox.isChecked = crime.isSolved
+        titleField.setText(crimeDetailViewModel.crime.title)
+        dateButton.text = crimeDetailViewModel.crime.date.toString()
+        solvedCheckBox.isChecked = crimeDetailViewModel.crime.isSolved
     }
 
     private fun bindViews(view: View) {
@@ -175,7 +171,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 before: Int,
                 count: Int
             ) {
-                crime.title = sequence.toString()
+                crimeDetailViewModel.crime.title = sequence.toString()
             }
 
             override fun afterTextChanged(p0: Editable?) {
