@@ -1,6 +1,6 @@
 package com.example.criminalintent.presentation.crime_detail
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
@@ -20,6 +20,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
@@ -39,6 +41,11 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
     }
+
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            onActivityResult(result)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +149,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 ).also { intent ->
                     val chooserIntent =
                         Intent.createChooser(intent, getString(R.string.send_report))
-                    startActivity(chooserIntent)
+                    resultLauncher.launch(chooserIntent)
                 }
             }
         }
@@ -150,7 +157,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             val pickContactIntent =
                 Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
             setOnClickListener {
-                startActivityForResult(pickContactIntent, REQUEST_CONTACT)
+                resultLauncher.launch(pickContactIntent)
             }
             val packageManager: PackageManager = requireActivity().packageManager
             val resolvedActivity: ResolveInfo? =
@@ -164,11 +171,10 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when {
-            resultCode != Activity.RESULT_OK -> return
-            requestCode == REQUEST_CONTACT && data != null -> {
-                val contactURI: Uri? = data.data
+    private fun onActivityResult(result: ActivityResult) {
+        when (result.resultCode) {
+            RESULT_OK -> {
+                val contactURI: Uri? = result.data?.data
                 val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
                 val cursor = requireActivity().contentResolver.query(
                     contactURI!!, queryFields, null, null, null
