@@ -1,5 +1,7 @@
 package com.example.criminalintent.presentation.crime_detail
 
+import android.view.View
+import android.widget.CheckBox
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,6 +14,10 @@ class CrimeDetailViewModel : ViewModel() {
     private val crimeRepository = CrimeRepository.get()
     private val crimeIdLiveData = MutableLiveData<Int>()
     var crime = Crime()
+
+    val checkboxClickListener = View.OnClickListener {
+            crime.isSolved = (it as CheckBox).isChecked
+    }
 
     var crimeLiveData: LiveData<Crime?> =
         Transformations.switchMap(crimeIdLiveData) { crimeId ->
