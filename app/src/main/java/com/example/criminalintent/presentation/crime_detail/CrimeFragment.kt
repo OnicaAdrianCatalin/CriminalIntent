@@ -86,7 +86,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addOrUpdateCrime() {
-        crimeDetailViewModel.upsert(crimeDetailViewModel.crime)
+        crimeDetailViewModel.upsertCrime(crimeDetailViewModel.crime)
         activity?.supportFragmentManager?.popBackStack()
     }
 
@@ -117,9 +117,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun setOnClickListeners() {
-        solvedCheckBox.setOnClickListener {
-            crimeDetailViewModel.crime.isSolved = solvedCheckBox.isChecked
-        }
+        solvedCheckBox.setOnClickListener(crimeDetailViewModel.checkboxClickListener)
         dateButton.setOnClickListener {
             DatePickerFragment.newInstance(crimeDetailViewModel.crime.date, DIALOG_DATE).apply {
                 show(this@CrimeFragment.childFragmentManager, DIALOG_DATE)

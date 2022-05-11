@@ -1,5 +1,7 @@
 package com.example.criminalintent.presentation.crime_detail
 
+import android.view.View
+import android.widget.CheckBox
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -18,6 +20,10 @@ class CrimeDetailViewModel : ViewModel() {
             crimeRepository.getCrime(crimeId)
         }
 
+    var checkboxClickListener = View.OnClickListener {
+        crime.isSolved = (it as CheckBox).isChecked
+    }
+
     fun addCrime(crime: Crime) {
         crimeRepository.addCrime(crime)
     }
@@ -30,7 +36,7 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun upsert(crime: Crime) {
-        crimeRepository.upsert(crime)
+    fun upsertCrime(crime: Crime) {
+        crimeRepository.upsertCrime(crime)
     }
 }
