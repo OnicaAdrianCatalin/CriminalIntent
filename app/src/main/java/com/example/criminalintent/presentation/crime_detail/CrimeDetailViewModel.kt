@@ -36,7 +36,7 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun upsertCrime(crime: Crime) {
-        crimeRepository.upsertCrime(crime)
+    fun addOrUpdate(crime: Crime) {
+        crimeRepository.addOrUpdate(crime)
     }
 }

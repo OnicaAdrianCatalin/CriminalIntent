@@ -51,7 +51,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onViewCreated(view, savedInstanceState)
         childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
-        setOnBackPressed()
+        showDialogOnBackPressed()
     }
 
     private fun loadCrimeFromArguments() {
@@ -59,7 +59,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
-    private fun setOnBackPressed() {
+    private fun showDialogOnBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -72,13 +72,14 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.view_crimedetail, menu)
+        inflater.inflate(R.menu.menu_crimedetail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_crime -> {
                 addOrUpdateCrime()
+                activity?.supportFragmentManager?.popBackStack()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -86,8 +87,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addOrUpdateCrime() {
-        crimeDetailViewModel.upsertCrime(crimeDetailViewModel.crime)
-        activity?.supportFragmentManager?.popBackStack()
+        crimeDetailViewModel.addOrUpdate(crimeDetailViewModel.crime)
     }
 
     private fun observeData() {
