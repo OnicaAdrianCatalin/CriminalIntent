@@ -18,15 +18,17 @@ interface CrimeDao {
     @Query("SELECT * FROM crime WHERE id =(:id)")
     fun getCrime(id: Int): LiveData<Crime?>
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateCrime(crime: Crime)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addCrime(crime: Crime)
+    fun addCrime(crime: Crime): Long
 
     @Transaction
     fun addOrUpdate(crime: Crime) {
-        addCrime(crime)
-        updateCrime(crime)
+        val id: Long = addCrime(crime)
+        if (id == -1L) {
+            updateCrime(crime)
+        }
     }
 }

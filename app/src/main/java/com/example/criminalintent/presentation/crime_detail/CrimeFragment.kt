@@ -72,7 +72,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_crimedetail, menu)
+        inflater.inflate(R.menu.menu_crime_detail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
