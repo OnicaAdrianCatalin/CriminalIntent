@@ -10,7 +10,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
-
 class DatePickerFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -18,7 +17,11 @@ class DatePickerFragment : DialogFragment() {
         val args = arguments?.getSerializable(ARG_DATE) as Date
         date.time = args
         return DatePickerDialog(
-            requireContext(), getDateListener(), date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH)
+            requireContext(),
+            getDateListener(),
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH)
         )
     }
 
