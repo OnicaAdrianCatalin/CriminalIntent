@@ -1,11 +1,11 @@
 package com.example.criminalintent.data.local
 
-import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.criminalintent.data.model.Crime
 
@@ -18,17 +18,16 @@ interface CrimeDao {
     @Query("SELECT * FROM crime WHERE id =(:id)")
     fun getCrime(id: Int): LiveData<Crime?>
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateCrime(crime: Crime)
 
-    @Insert
-    fun addCrime(crime: Crime)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun addCrime(crime: Crime): Long
 
-    fun upsertCrime(crime: Crime) {
-        try {
-            addCrime(crime)
-        } catch (exception: SQLiteConstraintException) {
-            Log.e("exception", "upsert: ${exception.message}")
+    @Transaction
+    fun addOrUpdate(crime: Crime) {
+        val id: Long = addCrime(crime)
+        if (id == -1L) {
             updateCrime(crime)
         }
     }

@@ -16,7 +16,7 @@ class CrimeDetailViewModel : ViewModel() {
     var crime = Crime()
 
     val checkboxClickListener = View.OnClickListener {
-            crime.isSolved = (it as CheckBox).isChecked
+        crime.isSolved = (it as CheckBox).isChecked
     }
 
     var crimeLiveData: LiveData<Crime?> =
@@ -36,7 +36,7 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun upsert(crime: Crime) {
-        crimeRepository.upsert(crime)
+    fun addOrUpdate(crime: Crime) {
+        crimeRepository.addOrUpdate(crime)
     }
 }

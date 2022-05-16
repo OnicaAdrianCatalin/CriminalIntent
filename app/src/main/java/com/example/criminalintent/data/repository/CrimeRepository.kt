@@ -25,9 +25,9 @@ class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
         }
     }
 
-    fun upsert(crime: Crime) {
+    fun addOrUpdate(crime: Crime) {
         executor.execute {
-            crimeDao.upsertCrime(crime)
+            crimeDao.addOrUpdate(crime)
         }
     }
 

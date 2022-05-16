@@ -2,8 +2,6 @@ package com.example.criminalintent.presentation.crime_detail
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -67,7 +65,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onViewCreated(view, savedInstanceState)
         childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
-        setOnBackPressed()
+        showDialogOnBackPressed()
     }
 
     private fun loadCrimeFromArguments() {
@@ -75,7 +73,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
-    private fun setOnBackPressed() {
+    private fun showDialogOnBackPressed() {
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -88,13 +86,14 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.view_crimedetail, menu)
+        inflater.inflate(R.menu.menu_crime_detail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_crime -> {
                 addOrUpdateCrime()
+                activity?.supportFragmentManager?.popBackStack()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -102,8 +101,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addOrUpdateCrime() {
-        crimeDetailViewModel.upsert(crimeDetailViewModel.crime)
-        activity?.supportFragmentManager?.popBackStack()
+        crimeDetailViewModel.addOrUpdate(crimeDetailViewModel.crime)
     }
 
     private fun observeData() {
@@ -140,33 +138,30 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             }
         }
         reportButton.setOnClickListener {
-            Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, getCrimeReport())
-                putExtra(
-                    Intent.EXTRA_SUBJECT,
-                    getString(R.string.crime_report_subject)
-                ).also { intent ->
-                    val chooserIntent =
-                        Intent.createChooser(intent, getString(R.string.send_report))
-                    resultLauncher.launch(chooserIntent)
-                }
-            }
+            sendCrimeReport()
         }
-        suspectButton.apply {
-            val pickContactIntent =
-                Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
-            setOnClickListener {
-                resultLauncher.launch(pickContactIntent)
-            }
-            val packageManager: PackageManager = requireActivity().packageManager
-            val resolvedActivity: ResolveInfo? =
-                packageManager.resolveActivity(
-                    pickContactIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY
-                )
-            if (resolvedActivity == null) {
-                isEnabled = true
+        suspectButton.setOnClickListener {
+            pickContactIntent()
+        }
+    }
+
+    private fun pickContactIntent() {
+        val pickContactIntent =
+            Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        resultLauncher.launch(pickContactIntent)
+    }
+
+    private fun sendCrimeReport() {
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                getString(R.string.crime_report_subject)
+            ).also { intent ->
+                val chooserIntent =
+                    Intent.createChooser(intent, getString(R.string.send_report))
+                startActivity(chooserIntent)
             }
         }
     }
@@ -186,7 +181,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                     it.moveToFirst()
                     val suspect = it.getString(0)
                     crimeDetailViewModel.crime.suspect = suspect
-                    crimeDetailViewModel.addCrime(crimeDetailViewModel.crime)
+                    crimeDetailViewModel.addOrUpdate(crimeDetailViewModel.crime)
                     suspectButton.text = suspect
                 }
             }
@@ -196,13 +191,13 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private fun showAlertDialog() {
         context?.let {
             MaterialAlertDialogBuilder(it)
-                .setTitle("Alert!")
-                .setMessage("If you exit, the changes will not be saved")
+                .setTitle(R.string.dialog_title)
+                .setMessage(R.string.dialog_message)
                 .setNegativeButton(
-                    "Discard changes"
+                    R.string.dialog_negative
                 ) { _, _ -> activity?.supportFragmentManager?.popBackStack() }
                 .setPositiveButton(
-                    "Continue editing"
+                    R.string.dialog_positive
                 ) { dialogInterface, _ -> dialogInterface.dismiss() }
                 .show()
         }
@@ -277,7 +272,6 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         private const val DATE_FORMAT = "EEE, MMM, dd"
         private const val ARG_CRIME_ID = "crime_id"
         private const val DIALOG_DATE = "DialogDate"
-        private const val REQUEST_CONTACT = 1
 
         fun newInstance(crimeId: Int): CrimeFragment {
             val args = bundleOf(ARG_CRIME_ID to crimeId)
