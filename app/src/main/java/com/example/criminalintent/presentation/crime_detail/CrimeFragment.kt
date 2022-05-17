@@ -171,18 +171,19 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             RESULT_OK -> {
                 val contactURI: Uri? = result.data?.data
                 val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
-                val cursor = requireActivity().contentResolver.query(
-                    contactURI!!, queryFields, null, null, null
-                )
+                val cursor = contactURI?.let {
+                    requireActivity().contentResolver.query(
+                        it, queryFields, null, null, null
+                    )
+                }
                 cursor?.use {
                     if (it.count == 0) {
                         return
                     }
                     it.moveToFirst()
-                    val suspect = it.getString(0)
-                    crimeDetailViewModel.crime.suspect = suspect
-                    crimeDetailViewModel.addOrUpdate(crimeDetailViewModel.crime)
-                    suspectButton.text = suspect
+                    val suspectName = it.getString(0)
+                    crimeDetailViewModel.updateSuspect(suspectName)
+                    suspectButton.text = suspectName
                 }
             }
         }
