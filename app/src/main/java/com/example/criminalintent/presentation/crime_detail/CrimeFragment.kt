@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -169,23 +170,29 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private fun onActivityResult(result: ActivityResult) {
         when (result.resultCode) {
             RESULT_OK -> {
-                val contactURI: Uri? = result.data?.data
-                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
-                val cursor = contactURI?.let {
-                    requireActivity().contentResolver.query(
-                        it, queryFields, null, null, null
-                    )
-                }
-                cursor?.use {
-                    if (it.count == 0) {
-                        return
-                    }
-                    it.moveToFirst()
-                    val suspectName = it.getString(0)
-                    crimeDetailViewModel.updateSuspect(suspectName)
-                    suspectButton.text = suspectName
-                }
+                onContentSelected()
             }
+        }
+    }
+
+    private fun onContentSelected() {
+        val contactURI: Uri? = null
+        val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+        if (contactURI != null) {
+            val cursor = requireActivity().contentResolver.query(
+                contactURI, queryFields, null, null, null
+            )
+            cursor?.use {
+                if (it.count == 0) {
+                    return
+                }
+                it.moveToFirst()
+                val suspectName = it.getString(0)
+                crimeDetailViewModel.onSuspectNameSelected(suspectName)
+                suspectButton.text = suspectName
+            }
+        } else {
+            Toast.makeText(this.requireContext(), R.string.error, Toast.LENGTH_LONG).show()
         }
     }
 

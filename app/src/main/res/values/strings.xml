@@ -21,4 +21,5 @@
     <string name="crime_report_suspect">The suspect is %s.</string>
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
     <string name="send_report">Send Crime Report via</string>
+    <string name="error">An error occurred</string>
 </resources>
