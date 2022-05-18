@@ -7,47 +7,84 @@
     android:orientation="vertical"
     tools:context=".presentation.crime_detail.CrimeFragment">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/crime_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/title_hint"
-        android:inputType="text" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/details" />
+            <ImageView
+                android:id="@+id/crime_photo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@android:color/darker_gray"
+                android:cropToPadding="true"
+                android:scaleType="centerInside" />
 
-    <Button
-        android:id="@+id/crime_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Wed Nov 14 11:56 EST 2018" />
+            <ImageButton
+                android:id="@+id/crime_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_camera" />
 
-    <CheckBox
-        android:id="@+id/crime_solved"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/solved" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/crime_suspect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/crime_suspect_text" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/crime_report"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/crime_report_text" />
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title" />
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/crime_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_hint"
+                android:inputType="text" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/details" />
+
+        <Button
+            android:id="@+id/crime_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Wed Nov 14 11:56 EST 2018" />
+
+        <CheckBox
+            android:id="@+id/crime_solved"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/solved" />
+
+        <Button
+            android:id="@+id/crime_suspect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crime_suspect_text" />
+
+        <Button
+            android:id="@+id/crime_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crime_report_text" />
+
+    </LinearLayout>

@@ -3,10 +3,13 @@ package com.example.criminalintent.data.repository
 import androidx.lifecycle.LiveData
 import com.example.criminalintent.data.local.CrimeDao
 import com.example.criminalintent.data.model.Crime
+import java.io.File
 import java.util.concurrent.Executors
 
-class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
-
+class CrimeRepository private constructor(
+    private val crimeDao: CrimeDao,
+    private val filesDir: File?
+) {
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
@@ -25,19 +28,21 @@ class CrimeRepository private constructor(private val crimeDao: CrimeDao) {
         }
     }
 
-    fun upsert(crime: Crime) {
+    fun addOrUpdate(crime: Crime) {
         executor.execute {
-            crimeDao.upsertCrime(crime)
+            crimeDao.addOrUpdate(crime)
         }
     }
+
+    fun getPhotoFile(crime: Crime) = File(filesDir, crime.photoFileName)
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
         const val DATABASE_NAME = "crime-database"
 
-        fun initialize(crimeDao: CrimeDao) {
+        fun initialize(crimeDao: CrimeDao, filesDir: File) {
             if (INSTANCE == null) {
-                INSTANCE = CrimeRepository(crimeDao)
+                INSTANCE = CrimeRepository(crimeDao, filesDir)
             }
         }
 

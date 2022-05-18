@@ -24,7 +24,7 @@ interface CrimeDao {
     @Insert
     fun addCrime(crime: Crime)
 
-    fun upsertCrime(crime: Crime) {
+    fun addOrUpdate(crime: Crime) {
         try {
             addCrime(crime)
         } catch (exception: SQLiteConstraintException) {

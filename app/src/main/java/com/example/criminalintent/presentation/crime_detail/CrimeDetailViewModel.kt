@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.data.repository.CrimeRepository
+import java.io.File
 
 class CrimeDetailViewModel : ViewModel() {
 
@@ -37,6 +38,10 @@ class CrimeDetailViewModel : ViewModel() {
     }
 
     fun upsert(crime: Crime) {
-        crimeRepository.upsert(crime)
+        crimeRepository.addOrUpdate(crime)
+    }
+
+    fun getPhotoFile(crime: Crime): File {
+        return crimeRepository.getPhotoFile(crime)
     }
 }
