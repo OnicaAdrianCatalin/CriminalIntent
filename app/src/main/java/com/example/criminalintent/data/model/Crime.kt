@@ -9,5 +9,6 @@ data class Crime(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var title: String = "",
     var date: Date = Date(),
-    var isSolved: Boolean = false
+    var isSolved: Boolean = false,
+    var suspect: String = ""
 )

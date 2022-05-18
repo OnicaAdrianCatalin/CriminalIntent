@@ -15,13 +15,17 @@ class CrimeDetailViewModel : ViewModel() {
     private val crimeIdLiveData = MutableLiveData<Int>()
     var crime = Crime()
 
+    val checkboxClickListener = View.OnClickListener {
+        crime.isSolved = (it as CheckBox).isChecked
+    }
     var crimeLiveData: LiveData<Crime?> =
         Transformations.switchMap(crimeIdLiveData) { crimeId ->
             crimeRepository.getCrime(crimeId)
         }
 
-    var checkboxClickListener = View.OnClickListener {
-        crime.isSolved = (it as CheckBox).isChecked
+    fun onSuspectNameSelected(suspectName: String) {
+        crime.suspect = suspectName
+        addOrUpdate(crime)
     }
 
     fun addCrime(crime: Crime) {
