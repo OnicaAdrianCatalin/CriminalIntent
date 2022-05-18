@@ -170,13 +170,13 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private fun onActivityResult(result: ActivityResult) {
         when (result.resultCode) {
             RESULT_OK -> {
-                onContentSelected()
+                onContactSelected(result)
             }
         }
     }
 
-    private fun onContentSelected() {
-        val contactURI: Uri? = null
+    private fun onContactSelected(result: ActivityResult) {
+        val contactURI: Uri? = result.data?.data
         val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
         if (contactURI != null) {
             val cursor = requireActivity().contentResolver.query(
@@ -192,7 +192,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 suspectButton.text = suspectName
             }
         } else {
-            Toast.makeText(this.requireContext(), R.string.error, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_LONG).show()
         }
     }
 

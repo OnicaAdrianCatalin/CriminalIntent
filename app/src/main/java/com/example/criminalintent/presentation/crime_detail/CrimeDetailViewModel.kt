@@ -23,8 +23,8 @@ class CrimeDetailViewModel : ViewModel() {
             crimeRepository.getCrime(crimeId)
         }
 
-    fun onSuspectNameSelected(suspect: String) {
-        crime.suspect = suspect
+    fun onSuspectNameSelected(suspectName: String) {
+        crime.suspect = suspectName
         addOrUpdate(crime)
     }
 
