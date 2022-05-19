@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -242,7 +241,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_LONG).show()
         }
     }
-    
+
     private fun showAlertDialog() {
         context?.let {
             MaterialAlertDialogBuilder(it)
@@ -252,7 +251,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                     R.string.dialog_negative
                 ) { _, _ ->
                     activity?.supportFragmentManager?.popBackStack()
-                    if(viewModel.crimeLiveData.value?.photoFileName == null){
+                    if (viewModel.crimeLiveData.value?.photoFileName == null) {
                         viewModel.getPhotoFile().delete()
                     }
                 }
