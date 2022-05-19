@@ -19,7 +19,6 @@ class CrimeDetailViewModel : ViewModel() {
     val checkboxClickListener = View.OnClickListener {
         crime.isSolved = (it as CheckBox).isChecked
     }
-
     var crimeLiveData: LiveData<Crime?> =
         Transformations.switchMap(crimeIdLiveData) { crimeId ->
             crimeRepository.getCrime(crimeId)

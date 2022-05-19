@@ -35,7 +35,7 @@ class CrimeRepository private constructor(
     }
 
     fun getPhotoFile(crime: Crime) = File(filesDir, crime.photoFileName)
-
+    
     companion object {
         private var INSTANCE: CrimeRepository? = null
         const val DATABASE_NAME = "crime-database"

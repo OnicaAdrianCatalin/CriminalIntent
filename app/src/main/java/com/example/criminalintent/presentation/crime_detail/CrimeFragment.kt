@@ -242,7 +242,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_LONG).show()
         }
     }
-
+    
     private fun showAlertDialog() {
         context?.let {
             MaterialAlertDialogBuilder(it)
