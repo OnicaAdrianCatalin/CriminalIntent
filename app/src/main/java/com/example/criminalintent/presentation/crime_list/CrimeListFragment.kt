@@ -24,7 +24,7 @@ class CrimeListFragment : Fragment() {
         fun onCrimeSelected(crimeId: Int)
     }
 
-    private val crimeListViewModel by lazy {
+    private val viewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
     private var callbacks: Callbacks? = null
@@ -80,7 +80,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun observeData() {
-        crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
+        viewModel.crimeListLiveData.observe(viewLifecycleOwner) { crimes ->
             warningTextView.isVisible = crimes.isEmpty()
             Log.i(TAG, "Got crimes ${crimes.size}")
             updateUI(crimes)

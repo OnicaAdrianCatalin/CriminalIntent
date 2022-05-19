@@ -17,13 +17,18 @@ class CrimeDetailViewModel : ViewModel() {
     var crime = Crime()
 
     val checkboxClickListener = View.OnClickListener {
-            crime.isSolved = (it as CheckBox).isChecked
+        crime.isSolved = (it as CheckBox).isChecked
     }
 
     var crimeLiveData: LiveData<Crime?> =
         Transformations.switchMap(crimeIdLiveData) { crimeId ->
             crimeRepository.getCrime(crimeId)
         }
+
+    fun onSuspectNameSelected(suspectName: String) {
+        crime.suspect = suspectName
+        addOrUpdate(crime)
+    }
 
     fun addCrime(crime: Crime) {
         crimeRepository.addCrime(crime)
@@ -37,11 +42,11 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun upsert(crime: Crime) {
+    fun addOrUpdate(crime: Crime) {
         crimeRepository.addOrUpdate(crime)
     }
 
-    fun getPhotoFile(crime: Crime): File {
+    fun getPhotoFile(): File {
         return crimeRepository.getPhotoFile(crime)
     }
 }
