@@ -102,7 +102,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.view_crimedetail, menu)
+        inflater.inflate(R.menu.menu_crime_detail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -255,10 +255,6 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                     if(viewModel.crimeLiveData.value?.photoFileName == null){
                         viewModel.getPhotoFile().delete()
                     }
-                    Log.d(
-                        "value",
-                        "showAlertDialog: value is ${viewModel.crimeLiveData.value?.photoFileName} "
-                    )
                 }
                 .setPositiveButton(
                     R.string.dialog_positive
