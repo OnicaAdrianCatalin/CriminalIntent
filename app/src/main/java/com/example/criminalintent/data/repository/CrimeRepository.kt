@@ -8,7 +8,7 @@ import java.util.concurrent.Executors
 
 class CrimeRepository private constructor(
     private val crimeDao: CrimeDao,
-    private val filesDir: File?
+    private val filesDir: File
 ) {
     private val executor = Executors.newSingleThreadExecutor()
 
@@ -34,10 +34,12 @@ class CrimeRepository private constructor(
         }
     }
 
-    fun getPhotoFile(crime: Crime) = File(filesDir, crime.photoFileName)
+    fun getPhotoFile() = File(filesDir, PHOTO_FILE_NAME)
+
     companion object {
         private var INSTANCE: CrimeRepository? = null
         const val DATABASE_NAME = "crime-database"
+        private const val PHOTO_FILE_NAME = "temporary_file"
 
         fun initialize(crimeDao: CrimeDao, filesDir: File) {
             if (INSTANCE == null) {

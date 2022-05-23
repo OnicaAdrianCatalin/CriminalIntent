@@ -51,11 +51,11 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
     }
 
-    private var resultLauncherSuspect =
+    private val resultLauncherSuspect =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             onActivityResult(result, REQUEST_CONTACT)
         }
-    private var resultLauncherPhoto =
+    private val resultLauncherPhoto =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             onActivityResult(result, REQUEST_PHOTO)
         }
@@ -108,6 +108,12 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         return when (item.itemId) {
             R.id.add_crime -> {
                 addOrUpdateCrime()
+                viewModel.getPhotoFile().renameTo(
+                    File(
+                        context?.applicationContext?.filesDir,
+                        viewModel.crime.photoFileName
+                    )
+                )
                 activity?.supportFragmentManager?.popBackStack()
                 true
             }
@@ -153,7 +159,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
             }
         }
         photoButton.setOnClickListener {
-            onCreatePhoto()
+            onTakePhotoClicked()
         }
         reportButton.setOnClickListener {
             sendCrimeReport()
@@ -163,12 +169,14 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         }
     }
 
-    private fun onCreatePhoto() {
-        val photoFileProviderUri =
-            viewModel.getPhotoFile().getFileProviderUri(requireContext(), AUTHORITY)
+    private fun onTakePhotoClicked() {
+        val photoUri: Uri = viewModel.getPhotoFile().getFileProviderUri(
+            requireActivity(),
+            AUTHORITY
+        )
         val packageManager: PackageManager = requireActivity().packageManager
         val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoFileProviderUri)
+        captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
         val cameraActivities: List<ResolveInfo> = packageManager.queryIntentActivities(
             captureImage,
             PackageManager.MATCH_DEFAULT_ONLY
@@ -176,7 +184,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         for (cameraActivity in cameraActivities) {
             requireActivity().grantUriPermission(
                 cameraActivity.activityInfo.packageName,
-                photoFileProviderUri,
+                photoUri,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
@@ -205,13 +213,15 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun onActivityResult(result: ActivityResult, requestCode: Int) {
-        when {
-            result.resultCode != RESULT_OK -> return
-            requestCode == REQUEST_CONTACT -> {
+        if (result.resultCode != RESULT_OK) {
+            return
+        }
+        when (requestCode) {
+            REQUEST_CONTACT -> {
                 onContactSelected(result)
             }
-            requestCode == REQUEST_PHOTO -> {
-                updatePhotoView()
+            REQUEST_PHOTO -> {
+                updatePhotoView(viewModel.getPhotoFile())
                 requireActivity().revokeUriPermission(
                     viewModel.getPhotoFile()
                         .getFileProviderUri(requireContext(), AUTHORITY),
@@ -251,9 +261,6 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                     R.string.dialog_negative
                 ) { _, _ ->
                     activity?.supportFragmentManager?.popBackStack()
-                    if (viewModel.crimeLiveData.value?.photoFileName == null) {
-                        viewModel.getPhotoFile().delete()
-                    }
                 }
                 .setPositiveButton(
                     R.string.dialog_positive
@@ -269,7 +276,9 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         if (viewModel.crime.suspect.isNotEmpty()) {
             suspectButton.text = viewModel.crime.suspect
         }
-        updatePhotoView()
+        val photoFile =
+            File(context?.applicationContext?.filesDir, viewModel.crime.photoFileName)
+        updatePhotoView(photoFile)
     }
 
     private fun getCrimeReport(): String {
@@ -331,12 +340,26 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         titleField.addTextChangedListener(titleWatcher)
     }
 
-    private fun updatePhotoView() {
-        if (viewModel.getPhotoFile().isEmpty()) {
-            photoView.setImageURI(null)
+    private fun updatePhotoView(photoFile: File) {
+        if (photoFile.exists()) {
+            photoView.setImageURI(Uri.fromFile(photoFile))
         } else {
-            photoView.setImageURI(Uri.fromFile(viewModel.getPhotoFile()))
+            photoView.setImageURI(null)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        requireActivity().revokeUriPermission(
+            viewModel.getPhotoFile()
+                .getFileProviderUri(requireContext(), AUTHORITY),
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.releaseResources()
     }
 
     companion object {
@@ -356,9 +379,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 }
 
-private fun File.isEmpty() = length() == 0L
-
-private fun File.getFileProviderUri(context: Context, authority: String): Uri? {
+private fun File.getFileProviderUri(context: Context, authority: String): Uri {
     return FileProvider.getUriForFile(
         context,
         authority, this

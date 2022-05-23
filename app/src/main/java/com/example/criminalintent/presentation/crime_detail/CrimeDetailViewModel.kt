@@ -14,6 +14,7 @@ class CrimeDetailViewModel : ViewModel() {
 
     private val crimeRepository = CrimeRepository.get()
     private val crimeIdLiveData = MutableLiveData<Int>()
+
     var crime = Crime()
 
     val checkboxClickListener = View.OnClickListener {
@@ -27,6 +28,16 @@ class CrimeDetailViewModel : ViewModel() {
     fun onSuspectNameSelected(suspectName: String) {
         crime.suspect = suspectName
         addOrUpdate(crime)
+    }
+
+    fun getPhotoFile(): File {
+        return crimeRepository.getPhotoFile()
+    }
+
+    fun releaseResources() {
+        if (crimeLiveData.value?.photoFileName == null) {
+            getPhotoFile().delete()
+        }
     }
 
     fun addCrime(crime: Crime) {
@@ -43,9 +54,5 @@ class CrimeDetailViewModel : ViewModel() {
 
     fun addOrUpdate(crime: Crime) {
         crimeRepository.addOrUpdate(crime)
-    }
-
-    fun getPhotoFile(): File {
-        return crimeRepository.getPhotoFile(crime)
     }
 }

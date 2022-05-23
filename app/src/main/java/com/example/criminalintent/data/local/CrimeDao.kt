@@ -3,7 +3,6 @@ package com.example.criminalintent.data.local
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
@@ -18,10 +17,10 @@ interface CrimeDao {
     @Query("SELECT * FROM crime WHERE id =(:id)")
     fun getCrime(id: Int): LiveData<Crime?>
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update
     fun updateCrime(crime: Crime)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun addCrime(crime: Crime): Long
 
     @Transaction
