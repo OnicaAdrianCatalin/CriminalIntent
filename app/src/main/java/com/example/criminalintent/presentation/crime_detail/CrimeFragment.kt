@@ -110,8 +110,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 addOrUpdateCrime()
                 viewModel.getPhotoFile().renameTo(
                     File(
-                        context?.applicationContext?.filesDir,
-                        viewModel.crime.photoFileName
+                        context?.applicationContext?.filesDir, viewModel.crime.photoFileName
                     )
                 )
                 activity?.supportFragmentManager?.popBackStack()
