@@ -34,7 +34,7 @@ class CrimeRepository private constructor(
         }
     }
 
-    fun getPhotoFile() = File(filesDir, TEMPORARY_PHOTO_FILE_NAME)
+    fun getPhotoFile(fileName: String = TEMPORARY_PHOTO_FILE_NAME) = File(filesDir, fileName)
 
     companion object {
         private var INSTANCE: CrimeRepository? = null

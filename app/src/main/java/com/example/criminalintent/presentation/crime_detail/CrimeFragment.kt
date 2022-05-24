@@ -108,11 +108,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         return when (item.itemId) {
             R.id.add_crime -> {
                 addOrUpdateCrime()
-                viewModel.getPhotoFile().renameTo(
-                    File(
-                        context?.applicationContext?.filesDir, viewModel.crime.photoFileName
-                    )
-                )
+                viewModel.addOrUpdatePhotoFile()
                 activity?.supportFragmentManager?.popBackStack()
                 true
             }
