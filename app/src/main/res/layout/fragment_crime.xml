@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    tools:context=".presentation.crime_detail.CrimeFragment">
+    tools:context=".presentation.crimeDetail.CrimeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
