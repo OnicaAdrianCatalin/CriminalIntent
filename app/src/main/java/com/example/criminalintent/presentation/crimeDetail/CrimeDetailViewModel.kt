@@ -27,7 +27,7 @@ class CrimeDetailViewModel : ViewModel() {
 
     fun onSuspectNameSelected(suspectName: String) {
         crime.suspect = suspectName
-        addOrUpdate()
+        addOrUpdateCrime()
     }
 
     fun getPhotoFile(fileName: String? = null): File {
@@ -69,7 +69,7 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun addOrUpdate() {
+    fun addOrUpdateCrime() {
         crimeRepository.addOrUpdate(crime)
     }
 }
