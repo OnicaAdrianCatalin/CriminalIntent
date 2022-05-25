@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_list
+package com.example.criminalintent.presentation.crimeList
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.criminalintent.presentation.crime_detail
+package com.example.criminalintent.presentation.crimeDetail
 
 import android.view.View
 import android.widget.CheckBox

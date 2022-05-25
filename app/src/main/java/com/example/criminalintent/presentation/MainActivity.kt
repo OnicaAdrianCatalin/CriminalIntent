@@ -3,8 +3,8 @@ package com.example.criminalintent.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.criminalintent.R
-import com.example.criminalintent.presentation.crime_detail.CrimeFragment
-import com.example.criminalintent.presentation.crime_list.CrimeListFragment
+import com.example.criminalintent.presentation.crimeDetail.CrimeFragment
+import com.example.criminalintent.presentation.crimeList.CrimeListFragment
 
 class MainActivity :
     AppCompatActivity(),
