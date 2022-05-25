@@ -11,5 +11,5 @@ data class Crime(
     var date: Date = Date(),
     var isSolved: Boolean = false,
     var suspect: String = "",
-    var photoFileName: String = "IMG_${System.currentTimeMillis()}.jpg"
+    val photoFileName: String = "IMG_${System.currentTimeMillis()}.jpg"
 )

@@ -34,12 +34,12 @@ class CrimeRepository private constructor(
         }
     }
 
-    fun getPhotoFile() = File(filesDir, PHOTO_FILE_NAME)
+    fun getPhotoFile(fileName: String = TEMPORARY_PHOTO_FILE_NAME) = File(filesDir, fileName)
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
         const val DATABASE_NAME = "crime-database"
-        private const val PHOTO_FILE_NAME = "temporary_file"
+        private const val TEMPORARY_PHOTO_FILE_NAME = "temporary_file"
 
         fun initialize(crimeDao: CrimeDao, filesDir: File) {
             if (INSTANCE == null) {

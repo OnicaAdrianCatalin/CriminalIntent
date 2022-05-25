@@ -27,11 +27,28 @@ class CrimeDetailViewModel : ViewModel() {
 
     fun onSuspectNameSelected(suspectName: String) {
         crime.suspect = suspectName
-        addOrUpdate(crime)
+        addOrUpdateCrime()
     }
 
-    fun getPhotoFile(): File {
-        return crimeRepository.getPhotoFile()
+    fun getPhotoFile(fileName: String? = null): File {
+        return if (fileName == null) {
+            crimeRepository.getPhotoFile()
+        } else {
+            crimeRepository.getPhotoFile(fileName)
+        }
+    }
+
+    fun addOrUpdatePhotoFile() {
+        crimeLiveData.value?.photoFileName?.let { photoFileName ->
+            getPhotoFile(photoFileName).apply {
+                if (exists() && getPhotoFile().exists()) {
+                    delete()
+                }
+            }
+        }
+        getPhotoFile().renameTo(
+            getPhotoFile(crime.photoFileName)
+        )
     }
 
     fun releaseResources() {
@@ -52,7 +69,7 @@ class CrimeDetailViewModel : ViewModel() {
         crimeRepository.updateCrime(crime)
     }
 
-    fun addOrUpdate(crime: Crime) {
+    fun addOrUpdateCrime() {
         crimeRepository.addOrUpdate(crime)
     }
 }
