@@ -14,7 +14,8 @@ class CriminalIntentApplication : Application() {
         val database =
             Room.databaseBuilder(this, CrimeDatabase::class.java, CrimeRepository.DATABASE_NAME)
                 .addMigrations(migration()).build()
-        CrimeRepository.initialize(database.crimeDao())
+        val filesDir = applicationContext.filesDir
+        CrimeRepository.initialize(database.crimeDao(), filesDir)
     }
 
     private fun migration(): Migration {

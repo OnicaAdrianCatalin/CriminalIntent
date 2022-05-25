@@ -18,7 +18,7 @@ interface CrimeDao {
     @Query("SELECT * FROM crime WHERE id =(:id)")
     fun getCrime(id: Int): LiveData<Crime?>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     fun updateCrime(crime: Crime)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

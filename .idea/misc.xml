@@ -6,12 +6,13 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/crime_fragment.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_crime.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_crime.xml" value="0.11" />
         <entry key="app/src/main/res/layout/fragment_crime_list.xml" value="0.12208713272543059" />
         <entry key="app/src/main/res/layout/list_item_crime.xml" value="0.45" />
         <entry key="app/src/main/res/menu/crime_detail_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/crime_list_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/fragment_crime_list.xml" value="0.24427083333333333" />
+        <entry key="app/src/main/res/xml/files.xml" value="0.6891447368421053" />
       </map>
     </option>
   </component>
@@ -20,5 +21,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.11" />
+      </ProjectState>
+    </option>
   </component>
 </project>
