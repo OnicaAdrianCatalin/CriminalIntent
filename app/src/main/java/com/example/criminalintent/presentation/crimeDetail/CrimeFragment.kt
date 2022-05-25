@@ -107,17 +107,13 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_crime -> {
-                addOrUpdateCrime()
+                viewModel.addOrUpdate()
                 viewModel.addOrUpdatePhotoFile()
                 activity?.supportFragmentManager?.popBackStack()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun addOrUpdateCrime() {
-        viewModel.addOrUpdate(viewModel.crime)
     }
 
     private fun observeData() {
