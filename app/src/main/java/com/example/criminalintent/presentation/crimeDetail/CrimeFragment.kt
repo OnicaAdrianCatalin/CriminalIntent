@@ -334,8 +334,10 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private fun updatePhotoView(photoFile: File) {
         if (photoFile.exists()) {
             photoView.setImageURI(Uri.fromFile(photoFile))
+            photoView.contentDescription = getString(R.string.crime_photo_image_description)
         } else {
             photoView.setImageURI(null)
+            photoView.contentDescription = getString(R.string.crime_photo_no_image_description)
         }
     }
 
