@@ -25,11 +25,6 @@ class CrimeDetailViewModel : ViewModel() {
             crimeRepository.getCrime(crimeId)
         }
 
-    fun onSuspectNameSelected(suspectName: String) {
-        crime.suspect = suspectName
-        addOrUpdateCrime()
-    }
-
     fun getPhotoFile(fileName: String? = null): File {
         return if (fileName == null) {
             crimeRepository.getPhotoFile()
