@@ -235,7 +235,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 }
                 it.moveToFirst()
                 val suspectName = it.getString(0)
-                viewModel.onSuspectNameSelected(suspectName)
+                viewModel.crime.suspect = suspectName
                 suspectButton.text = suspectName
             }
         } else {
