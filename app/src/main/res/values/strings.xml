@@ -25,4 +25,13 @@
     <string name="crime_photo_image_description">Crime scene photo</string>
     <string name="send_report">Send Crime Report via</string>
     <string name="error">An error occurred</string>
+    <string name="create_account">Create Account</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="no_account">Dont have an account? Sign Up!</string>
+    <string name="have_account">Already have an account? Login here!</string>
+    <string name="sign_out">SignOut</string>
 </resources>
