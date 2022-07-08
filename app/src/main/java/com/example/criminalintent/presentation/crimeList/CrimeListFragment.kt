@@ -1,6 +1,5 @@
 package com.example.criminalintent.presentation.crimeList
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,36 +10,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
 
 class CrimeListFragment : Fragment() {
-    interface Callbacks {
-        fun onCrimeSelected(crimeId: Int)
-    }
 
-    private val viewModel by lazy {
-        ViewModelProvider(this).get(CrimeListViewModel::class.java)
+    private val viewModel: CrimeListViewModel by lazy {
+        ViewModelProvider(this)[CrimeListViewModel::class.java]
     }
-    private var callbacks: Callbacks? = null
     private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
     private lateinit var warningTextView: TextView
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,28 +43,39 @@ class CrimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuItems()
         observeData()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_crime_list, menu)
-    }
+    private fun addMenuItems() {
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_crime_list, menu)
+                }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.new_crime -> {
-                val crime = Crime()
-                callbacks?.onCrimeSelected(crime.id)
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.new_crime -> {
+                            val crime = Crime()
+                            val action =
+                                CrimeListFragmentDirections.actionCrimeListFragmentToCrimeFragment(
+                                    crime.id
+                                )
+                            findNavController().navigate(action)
+                            true
+                        }
+                        R.id.sign_out -> {
+                            viewModel.auth.signOut()
+                            findNavController().navigate(R.id.action_crimeListFragment_to_loginFragment)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     private fun observeData() {
@@ -117,7 +116,11 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(view: View?) {
-            callbacks?.onCrimeSelected(crime.id)
+            findNavController().navigate(
+                CrimeListFragmentDirections.actionCrimeListFragmentToCrimeFragment(
+                    crime.id
+                )
+            )
         }
     }
 
@@ -138,7 +141,5 @@ class CrimeListFragment : Fragment() {
 
     companion object {
         private const val TAG = "CrimeListFragment"
-
-        fun newInstance(): CrimeListFragment = CrimeListFragment()
     }
 }

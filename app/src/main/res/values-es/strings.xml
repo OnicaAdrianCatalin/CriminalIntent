@@ -28,4 +28,13 @@
     <string name="crime_photo_image_description">Foto de la escena del crimen</string>
     <string name="send_report">Enviar el informe del crimen a través de</string>
     <string name="error">Ocurrió un error</string>
+    <string name="create_account">Crear una quenta</string>
+    <string name="email_address">Email Dirección</string>
+    <string name="password">Clave</string>
+    <string name="login">Acceso</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="confirm_password">Confirmar contrasena</string>
+    <string name="no_account">¿No tienes una cuenta? ¡Inscribirse!</string>
+    <string name="have_account">¿Ya tienes una cuenta? ¡Entre aquí!</string>
+    <string name="sign_out">Desconectar</string>
 </resources>

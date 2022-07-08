@@ -28,10 +28,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import androidx.core.os.bundleOf
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.criminalintent.R
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -46,9 +48,8 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private lateinit var suspectButton: Button
     private lateinit var photoButton: ImageButton
     private lateinit var photoView: ImageView
-
     private val viewModel: CrimeDetailViewModel by lazy {
-        ViewModelProvider(this).get(CrimeDetailViewModel::class.java)
+        ViewModelProvider(this)[CrimeDetailViewModel::class.java]
     }
 
     private val resultLauncherSuspect =
@@ -63,7 +64,6 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loadCrimeFromArguments()
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -80,11 +80,12 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         super.onViewCreated(view, savedInstanceState)
         childFragmentManager.setFragmentResultListener(DIALOG_DATE, viewLifecycleOwner, this)
         observeData()
+        addMenuItems()
         showDialogOnBackPressed()
     }
 
     private fun loadCrimeFromArguments() {
-        val crimeId: Int = arguments?.getSerializable(ARG_CRIME_ID) as Int
+        val crimeId: Int = arguments?.getSerializable("crime_id") as Int
         viewModel.loadCrime(crimeId)
     }
 
@@ -99,21 +100,24 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_crime_detail, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.add_crime -> {
-                viewModel.addOrUpdateCrime()
-                viewModel.addOrUpdatePhotoFile()
-                activity?.supportFragmentManager?.popBackStack()
-                true
+    private fun addMenuItems() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_crime_detail, menu)
             }
-            else -> super.onOptionsItemSelected(item)
-        }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.add_crime -> {
+                        viewModel.addOrUpdateCrime()
+                        viewModel.addOrUpdatePhotoFile()
+                        findNavController().navigate(R.id.action_crimeFragment_to_crimeListFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun observeData() {
@@ -251,7 +255,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
                 .setNegativeButton(
                     R.string.dialog_negative
                 ) { _, _ ->
-                    activity?.supportFragmentManager?.popBackStack()
+                    findNavController().navigate(R.id.action_crimeFragment_to_crimeListFragment)
                 }
                 .setPositiveButton(
                     R.string.dialog_positive
@@ -360,15 +364,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
         private const val REQUEST_CONTACT = 1
         private const val REQUEST_PHOTO = 2
         private const val DATE_FORMAT = "EEE, MMM, dd"
-        private const val ARG_CRIME_ID = "crime_id"
         private const val DIALOG_DATE = "DialogDate"
-
-        fun newInstance(crimeId: Int): CrimeFragment {
-            val args = bundleOf(ARG_CRIME_ID to crimeId)
-            return CrimeFragment().apply {
-                arguments = args
-            }
-        }
     }
 }
 
