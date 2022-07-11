@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.criminalintent.data.repository.CrimeRepository
 import com.google.firebase.auth.FirebaseAuth
 
-class CrimeListViewModel : ViewModel() {
-
-    private val crimeRepository = CrimeRepository.get()
+class CrimeListViewModel(crimeRepository: CrimeRepository) : ViewModel() {
     val crimeListLiveData = crimeRepository.getCrimes()
     val auth = FirebaseAuth.getInstance()
 }
