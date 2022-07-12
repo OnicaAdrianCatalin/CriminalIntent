@@ -32,11 +32,11 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.criminalintent.R
 import com.example.criminalintent.presentation.dialogs.DatePickerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
 class CrimeFragment : Fragment(), FragmentResultListener {
@@ -48,9 +48,7 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     private lateinit var suspectButton: Button
     private lateinit var photoButton: ImageButton
     private lateinit var photoView: ImageView
-    private val viewModel: CrimeDetailViewModel by lazy {
-        ViewModelProvider(this)[CrimeDetailViewModel::class.java]
-    }
+    private val viewModel by viewModel<CrimeDetailViewModel>()
 
     private val resultLauncherSuspect =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -101,23 +99,26 @@ class CrimeFragment : Fragment(), FragmentResultListener {
     }
 
     private fun addMenuItems() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_crime_detail, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.add_crime -> {
-                        viewModel.addOrUpdateCrime()
-                        viewModel.addOrUpdatePhotoFile()
-                        findNavController().navigate(R.id.action_crimeFragment_to_crimeListFragment)
-                        true
-                    }
-                    else -> false
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_crime_detail, menu)
                 }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.add_crime -> {
+                            viewModel.addOrUpdateCrime()
+                            viewModel.addOrUpdatePhotoFile()
+                            findNavController().navigate(R.id.action_crimeFragment_to_crimeListFragment)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     private fun observeData() {

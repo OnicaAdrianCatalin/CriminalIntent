@@ -10,9 +10,8 @@ import com.example.criminalintent.data.model.Crime
 import com.example.criminalintent.data.repository.CrimeRepository
 import java.io.File
 
-class CrimeDetailViewModel : ViewModel() {
+class CrimeDetailViewModel(private val crimeRepository: CrimeRepository) : ViewModel() {
 
-    private val crimeRepository = CrimeRepository.get()
     private val crimeIdLiveData = MutableLiveData<Int>()
 
     var crime = Crime()

@@ -14,18 +14,16 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.R
 import com.example.criminalintent.data.model.Crime
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CrimeListFragment : Fragment() {
 
-    private val viewModel: CrimeListViewModel by lazy {
-        ViewModelProvider(this)[CrimeListViewModel::class.java]
-    }
+    private val viewModel by viewModel<CrimeListViewModel>()
     private var adapter: CrimeAdapter = CrimeAdapter(emptyList())
     private lateinit var crimeRecyclerView: RecyclerView
     private lateinit var warningTextView: TextView

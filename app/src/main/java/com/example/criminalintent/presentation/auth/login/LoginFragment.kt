@@ -8,13 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.criminalintent.R
 import com.example.criminalintent.utils.SignUpErrors
 import com.example.criminalintent.utils.observeEvent
 import com.example.criminalintent.utils.onFailure
 import com.example.criminalintent.utils.onSuccess
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
 
@@ -22,10 +22,7 @@ class LoginFragment : Fragment() {
     private lateinit var emailAddressEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
-
-    private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(this)[LoginViewModel::class.java]
-    }
+    private val viewModel by viewModel<LoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

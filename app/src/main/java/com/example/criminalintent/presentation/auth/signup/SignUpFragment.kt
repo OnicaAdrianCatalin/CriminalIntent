@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.criminalintent.R
 import com.example.criminalintent.utils.SignUpErrors
@@ -16,6 +15,7 @@ import com.example.criminalintent.utils.observeEvent
 import com.example.criminalintent.utils.onFailure
 import com.example.criminalintent.utils.onSuccess
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : Fragment() {
 
@@ -24,10 +24,7 @@ class SignUpFragment : Fragment() {
     private lateinit var confirmPasswordEditText: EditText
     private lateinit var signUpButton: Button
     private lateinit var loginTextView: TextView
-
-    private val viewModel by lazy {
-        ViewModelProvider(this)[SignUpViewModel::class.java]
-    }
+    private val viewModel by viewModel<SignUpViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
